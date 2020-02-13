@@ -69,21 +69,22 @@ const deleteUser = (request, response) => {
 const login = (request, response) => {
   const { email, password } = request.body
 
-  pool.query('SELECT email, password FROM users WHERE email = $1', [email], (error, results) => {
+  pool.query('SELECT email, password FROM account WHERE email = $1', [email], (error, results) => {
     if (error) {
       response.status(401).json(error)
       return
     }
-    if (result.rows.length === 0) {
-      response.status(404)
+    if (results.rows.length === 0) {
+      response.status(404).json('not found')
       return
     }
-    const user = result.rows[0]
+    const user = results.rows[0]
+    console.log(user)
     if (user.password !== password) {
-      response.status(401)
+      response.status(401).json('invalid password')
       return
     }
-    response.status(200)
+    response.status(200).json('OK')
   })
 }
 
